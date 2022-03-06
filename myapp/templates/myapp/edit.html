@@ -1,0 +1,60 @@
+{% extends 'myapp/base.html' %}
+{% block body %}
+
+<div class="container shadow p-3 mt-5">
+    <div class="row">
+        <div class="col-md-4 offset-4">
+            <h3>Update Banner</h3>
+            <form method="POST" enctype="multipart/form-data" class="mt-5">
+                {% csrf_token %}
+                <div>
+                    {{form.position.label_tag}}
+                    {{form.position}}
+                </div>
+                <div>
+                    {{form.start_date.label_tag}}
+                    {{form.start_date}}
+                </div>
+                <div>
+                    {{form.end_date.label_tag}}
+                    {{form.end_date}}
+                </div>
+                <div>
+                    {{form.end_time.label_tag}}
+                    {{form.end_time}}
+                </div>
+                <div>
+                    {{form.banner_type.label_tag}}
+                    {{form.banner_type}}
+                </div>
+                <div class="m-2">
+                    {{form.image.label_tag}}
+                    {% if form.banner_type.value == "Sliding Banner" %}
+                    <div class="container">
+                        <div class="row">
+                        {% for image in img %}
+                                <div class="col-lg-6 p-2 ">
+                                    <img src="{{ image.image.url }}" class="img-fluid" height="100px" width="200px"> 
+                                </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                        <input type="file" class="m-2" id="other-input" name="image" multiple>
+                        </input>
+                    {% else %}
+                        {{form.image}}
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-md-4 offset-2 mb-3" style="display: flex;
+                    justify-content: space-between;">
+                        <input class="btn btn-success " type="submit" value="Update">
+                        <a class="btn btn-danger" href="/ban_main"> Cancel </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

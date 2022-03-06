@@ -1,0 +1,200 @@
+{% extends 'myapp/base.html' %}
+{% block nav %}
+<a class="nav-item nav-link" href="{% url 'logoff' %}">LogOut</a>
+{% endblock nav %}
+{% block head %}
+
+{% endblock head %}
+{% block body %}
+<div class="container mt-4">
+    
+    {% for b in baner %}
+        {% if b.banner_type == "Normal Banner" %}
+        <div class="card shadow mb-3 pt-5">
+            <img class="card-img-top p-2 mt-3" src="{{ b.image.url }}" height="400px" alt="Card image cap">
+                <div class="card-img-overlay">
+                    <div class="d-flex flex-row-reverse">  
+                        {% if b.active %}
+                            <p class="card-text">
+                                <i class="fa fa-check mt-3" aria-hidden="true"  style="font-size:20px;color:green"></i>
+                            </p>
+                        {% else %}
+                            <p>
+                                <i class="fa fa-times mt-3" aria-hidden="true"  style="font-size:20px;color:red"></i>
+                            </p>    
+                        {% endif %}                  
+                        
+                    </div>
+                </div>
+                <div class="card-body">
+                <h5 class="card-title">Position {{ b.position }}</h5>
+                <p class="card-text">Date Posted {{ b.start_date }}</p>
+                <p class="card-text"><small class="text-muted">Banner Will Be Removed on {{ b.end_date }} at {{ b.end_time }}</small></p>
+                <div class="row mt-3">
+                    <div class="col-sm-4 offset-8">
+                        <a type ="submit" class="btn btn-danger delete" data-href="{% url 'delete' b.id  %}">Delete</a>
+                        <a href="{% url 'activate' b.id  %}" class="btn btn-success">Activate</a>
+                        <a href="{% url 'deactivate' b.id  %}" class="btn btn-danger">Deactivate</a>
+                        <a href="{% url 'edit' b.id %}" class="btn btn-warning">Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %} 
+
+        {% if b.banner_type == "Sliding Banner" %}
+        <div class="shadow pb-3 mt-4 mb-4">
+        <div class="bd-example">
+            <div class="d-flex flex-row-reverse mr-4">
+                {% if b.active %}
+                    <p class="card-text">
+                        <i class="fa fa-check mt-3" aria-hidden="true"  style="font-size:20px;color:green"></i>
+                    </p>
+                {% else %}
+                    <p>
+                        <i class="fa fa-times mt-3" aria-hidden="true"  style="font-size:20px;color:red"></i>
+                    </p>    
+                {% endif %}                      
+            
+
+            </div>  
+            <div id="carouselExampleCaptions{{b.id}}" class="carousel slide" data-ride="carousel">
+              <div class="carousel-inner">
+                <div class="carousel-item active bg-dark text-white" style="height: 400px; padding: 130px;">
+                    <h1>Position {{ b.position }}</h1>
+                    <p>Date Posted {{ b.start_date }}
+                    </p>
+                    <small class="text-muted">Banner Will Be Removed on {{ b.end_date }} at {{ b.end_time }}</small> 
+                </div>
+            {% for i in images %}
+                {% if b.position == i.position %}
+                    
+                    <div class="carousel-item">
+                        <img src="{{ i.image.url }}" height="400px" class="d-block w-100" alt="...">
+                    </div>            
+                {% endif %}
+                <a class="carousel-control-prev" href="#carouselExampleCaptions{{b.id}}" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions{{b.id}}" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            {% endfor %}
+                
+            </div>          
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-4 offset-8">
+            <a type ="submit" class="btn btn-danger delete" data-href="{% url 'delete' b.id  %}">Delete</a>
+            <a href="{% url 'activate' b.id  %}" class="btn btn-success">Activate</a>
+            <a href="{% url 'deactivate' b.id  %}" class="btn btn-danger">Deactivate</a>
+            <a href="{% url 'edit' b.id %}" class="btn btn-warning">Edit</a>
+        </div>
+    </div>
+</div>
+        {% endif %}
+      
+  {% endfor %}
+
+</div>
+
+<!-- Add Form -->
+
+<div class="container mt-5 mb-5">
+            <form class="shadow p-3" action="/upload" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h2 class="m-2 mb-5 text-center">Add Banner</h2>
+                <div class="form-group m-3">
+                    <label for="Image">Enter Position</label>
+                    <input type="number" class="form-control" name="position" id="position" placeholder="Enter Position">
+                </div>
+                <div class="form-group m-3">
+                    <label for="start_date">Start Date</label>
+                    <input type="date" class="form-control" name="start_date" id="start_date" placeholder="Enter Priority">
+                </div>
+                <div class="form-group m-3">
+                    <label for="end_date">End Date And Time</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="date" class="form-control" name="end_date" id="end_date" placeholder="Enter Priority">
+                        </div>
+                        <div class="col-md-6">
+                            <input type="time" class="form-control" id="end_time" name="end_time" min="00:00" max="24:00" value="00:00" required>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    function check(elem) {
+                        if (elem.selectedIndex == 1) {
+                            document.getElementById("slider-div").style.display = 'block';
+                            document.getElementById("normal-div").style.display = 'none';
+                        } else {
+                            document.getElementById("slider-div").style.display = 'none';
+                            document.getElementById("normal-div").style.display = 'block';
+                        }
+                    }
+                </script>
+                <div class="form-group m-3">
+                    <label for="types">Types</label>
+                    <select id="type" name="type" class="form-control" onchange="check(this);">
+                      <option selected>Select Type</option>
+                      <option>Sliding Banner </option>
+                      <option>Normal Banner </option>
+                    </select>
+                </div>
+                <div id="normal-div" class="form-group m-3" style="display:none;">
+                    <label for="Image">Select Image</label>
+                    <input type="file" class="" id="image" name="image">
+                </div>
+                <div id="slider-div" class="form-group m-3" style="display:none;">
+                    <label for="Image">Select Multiple Images</label>
+                    <input type="file" class="" id="other-input" name="image" multiple></input>
+                </div>
+                <input class="btn btn-success m-3 " type="submit" value="Upload">
+            </form>
+</div>
+
+
+{% comment %} Sweet alert {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.1/dist/sweetalert2.all.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        $(document).on('click','.delete', function () {
+            var href = $(this).data('href');
+
+            Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+            if (result.isConfirmed) {
+                
+                Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+                )
+                window.location.href=href;
+            }
+            })
+           
+        });
+    });
+    </script>
+
+{% endblock %}
+
+
+
+
+
+
+

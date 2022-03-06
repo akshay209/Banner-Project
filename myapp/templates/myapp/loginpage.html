@@ -1,0 +1,33 @@
+{% extends 'myapp/base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+</head>
+<body>
+    {% block body %}
+
+    <div class="container my-4">
+        <form method="POST" onsubmit="return validation();">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password">
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+          <p class="small fw-bold mt-3 pt-1 mb-0">Don't have an account? 
+              <a href="#!" class="link-danger">Register</a></p>
+        </form>
+    </div>
+
+      {% endblock %}
+</body>
+</html>
